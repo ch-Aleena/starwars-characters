@@ -2,7 +2,7 @@
 <div class="text-center py-3">
     <h4>List of characters</h4>
 </div>
-<ng-container *ngIf="total_records$|async as records else loading">
+<ng-container *ngIf="characterList$|async as records else loading">
     
 <div *ngFor="let res of records.results trackBy: trackByCharacterId">
     
@@ -15,8 +15,8 @@
 
 <app-pagination
 [TotalPages]="records.total_pages"
-[CurrentPage]="curent_page$.value"
-[perPage]="per_page$.value"
+[CurrentPage]="curentPage$.value"
+[perPage]="perPage$.value"
 (pagechanged)="perpagechanged($event)"
 >
 </app-pagination>

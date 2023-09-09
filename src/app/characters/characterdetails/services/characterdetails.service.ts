@@ -7,13 +7,17 @@ import { Characterdetails } from '../models/characterdetails';
   providedIn: 'root'
 })
 export class CharacterdetailsService {
-  private character_api_url="people/"
-  constructor(private _http:HttpClient,private _api:ApiService) { }
+
+  private characterApiUrl="people/"
+
+  constructor(
+    private readonly _http:HttpClient,
+    private readonly _api:ApiService
+  ) { }
 
   //retrieve character details from api call
-
-  getcharacterdetils(uid:string){
-    return this._api.get<Characterdetails>(this.character_api_url+uid)
-}
+  getCharacterDetils(uid:string){
+      return this._api.get<Characterdetails>(this.characterApiUrl+uid)
+  }
 
 }

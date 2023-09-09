@@ -5,13 +5,9 @@ import { CharacterdetailsComponent } from './characterdetails/comp/characterdeta
 import { CharacterplannetComponent } from './characterplannet/comp/characterplannet/characterplannet.component';
 import { Route, Router, RouterModule, Routes } from '@angular/router';
 import { PaginationComponent } from '../shared/ui/pagination/pagination/pagination.component';
+import { RoutesModule } from '../router/routes/routes.module';
 
-const routes:Routes=[
-  {path:'',component:CharacterlistComponent},
-  {path:'character',component:CharacterlistComponent},
-  {path:'character/details/:id',component:CharacterdetailsComponent},
-  {path:'character/plannet/:id',component:CharacterplannetComponent}
-]
+
 
 @NgModule({
   declarations: [
@@ -22,7 +18,7 @@ const routes:Routes=[
   ],
   imports: [
     CommonModule,
-    RouterModule.forChild(routes),
+    RoutesModule
   ],
 })
 export class CharactersModule { }

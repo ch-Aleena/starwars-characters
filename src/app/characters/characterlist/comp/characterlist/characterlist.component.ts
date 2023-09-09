@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CharacterlistFilters } from '../../model/characterlist-filters';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { ApiService } from 'src/app/shared/services/api.service';
@@ -14,93 +14,107 @@ import { ErrorService } from 'src/app/shared/services/error.service';
   selector: 'app-characterlist',
   templateUrl: './characterlist.component.html',
   styleUrls: ['./characterlist.component.css'],
+  changeDetection:ChangeDetectionStrategy.OnPush
 })
 export class CharacterlistComponent {
   
   constructor(
-    private Char_List_Service:CharacterlistService,
-    private activeRoute:ActivatedRoute,
-    private route:Router,
-    private _localstorage:StorageService,
-    private _errors:ErrorService
+    private readonly _characterList:CharacterlistService,
+    private readonly activeRoute:ActivatedRoute,
+    private readonly route:Router,
+    private readonly _localstorage:StorageService,
+    private readonly _errors:ErrorService
+
     ){}
 
   //characters list observable to store charcterlist
-
-  total_records$:Observable<Characterlist>
+  characterList$:Observable<Characterlist>
 
 
   //errors handling
-
   errors$:Observable<CustomError|null>|null
   
-  //behaviour subject for current page
-
-  public curent_page$:BehaviorSubject<number>=new BehaviorSubject(1)
+  //behaviour subject for handling current page reactively
+  public curentPage$:BehaviorSubject<number>=new BehaviorSubject(1)
 
   //behaviour subject for limit
+  public perPage$:BehaviorSubject<number>=new BehaviorSubject(10)
 
-  public per_page$:BehaviorSubject<number>=new BehaviorSubject(10)
+  //subscription
+  private subscription:Subscription
 
-  subscription:Subscription
-
-    ngOnInit(): void {
+  ngOnInit(): void {
+    //subscribe to query parameters
     this.subscription= this.activeRoute.queryParams.subscribe((params:Params)=>{
-            this.queryparams(params)
-     })
-    }
+    this.handleQueryParams(params)
+     }
+     );
+  }
 
-  
-    queryparams(params:Params){
-          //get query filters
-          const qfilters:CharacterlistFilters=this. getqueryparamobj(params)
-          console.log(qfilters)
-          this.loadcharcterlist(qfilters);
-    }
-     //localstorage key name
+  //handle query params of current page url
+  handleQueryParams(params:Params){
+          //get query filters from query params
+          const queryFilters:CharacterlistFilters=this. getqueryparamobj(params)
+          console.log(queryFilters)
+          //load character list using queryfilters
+          this.loadCharacterList(queryFilters);
+  }
 
-     private current_page="current-page"
+  //localstorage key name
+  private current_page="current-page"
 
-    //get query params
-
-    getqueryparamobj(params:Params):CharacterlistFilters{
-        const currentpage=this.getcurrentpage(params)
+  //get query params and convert into characterlistfilters obj
+  getqueryparamobj(params:Params):CharacterlistFilters{
+        //update current page behaviour subject
+        const currentpage=this.getCurrentPage(params)
         this._localstorage.setitem(this.current_page,currentpage)
-        this.curent_page$.next(currentpage)
+        this.curentPage$.next(currentpage)
+        //return query filters obj
         return {
           page:currentpage,
           limit:this.getCurrentPerPage(params)
         };
     }
-   //get current page
-   getcurrentpage(params:Params){
+   //get current page from query parameter or from behaviour subject
+  getCurrentPage(params:Params){
     if(params["page"]){
       return params["page"]
     }else{
-      return this.curent_page$.value
+      return this.curentPage$.value
     }
    }
   
-   getCurrentPerPage(params:Params){
-    return this.per_page$.value
+  //get items per page default value
+  getCurrentPerPage(params:Params){
+    return this.perPage$.value
    }
-   perpagechanged(page:number){
-         this.route.navigateByUrl(
-          `characters?page=${page}&limit=${this.per_page$.value}`
-         )
-   }
-  //load characterlist using filters
 
-  loadcharcterlist(filters:CharacterlistFilters){
-    this.total_records$=this.Char_List_Service.getcharacters(filters)
+  //page change event
+  perpagechanged(page:number){
+         this.route.navigateByUrl(
+          `characters?page=${page}&limit=${this.perPage$.value}`
+         );
   }
+
+  //load characterlist using filters
+  loadCharacterList(filters:CharacterlistFilters){
+    this.characterList$=this._characterList.getCharacters(filters)
+  }
+
+  //navigate to character details page for given character
   characterdetails(id:string){
      this.route.navigate([`characters/character/details/${id}`])
   }
+
+  //track each character of array based on character uid
   trackByCharacterId(index: number, character: Character): string {
-    return character.uid;
+     return character.uid;
   }
+
+  //on component destroy
   ngOnDestroy(){
-    this.subscription.unsubscribe
+    if(this.subscription){
+      this.subscription.unsubscribe()
+    } 
   }
 }

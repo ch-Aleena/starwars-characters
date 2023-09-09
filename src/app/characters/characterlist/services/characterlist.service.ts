@@ -9,30 +9,35 @@ import { ErrorService } from 'src/app/shared/services/error.service';
 @Injectable({
   providedIn: 'root'
 })
+
 export class CharacterlistService {
 
-  Api_Url='people'
+ private characterListApiUrl='people'
 
-  constructor(private _api:ApiService,private err:ErrorService){}
+  constructor(
+    private readonly _api:ApiService
+    ){}
 
-//method to get list of characters
-
-  getcharacters(filters:CharacterlistFilters):Observable<Characterlist>{
+  //get list of characters
+  getCharacters(filters:CharacterlistFilters):Observable<Characterlist>{
     return this._api.get<Characterlist>(
-     this.Api_Url,
-     this.urlfromfilterobject(filters)
+     this.characterListApiUrl,
+     this.urlFromFilterObject(filters)
     )
-}
+  }
 
-//filters for pagination 
-  private urlfromfilterobject(filter:CharacterlistFilters):HttpParams{
+  //filters for pagination
+  private urlFromFilterObject(filter:CharacterlistFilters):HttpParams{
     let params=new HttpParams()
+
     if(filter.page!==undefined){
     params=params.set("page",filter.page.toString())
     }
+
     if(filter.limit!==undefined){
     params=params.set("limit",filter.limit.toString())
     }
+    
     return params
   }
 }
