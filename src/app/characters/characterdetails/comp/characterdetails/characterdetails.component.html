@@ -1,0 +1,50 @@
+<div class="container">
+<div class=" mt-5 details">
+<div *ngIf="characterdetails$|async as details else loading">
+
+    <div *ngIf="details.result as result">
+        <div *ngIf="result.properties as prop">
+             <h4 class="text-center pb-2">
+             {{ prop?.name }}
+             </h4>
+             <p class="border-bottom ">
+                Mass:<span class="float-end">{{ prop?.mass }}</span>
+                
+             </p>
+             <p class="border-bottom ">
+                Gender:<span class="float-end">{{ prop?. gender}}</span> 
+             </p>
+             <p class="border-bottom ">
+                Skin-Color: <span class="float-end">{{ prop?.skin_color }}</span>
+             </p>
+             <p class="border-bottom ">
+               Eye-Color:  <span class="float-end">{{ prop?.eye_color }}</span>
+             </p>
+             <p class="border-bottom ">
+                Hair-Color:  <span class="float-end">{{ prop?.hair_color }}</span>
+              </p>
+             <p class="border-bottom ">
+                Birth-Year:  <span class="float-end">{{ prop?. birth_year}}</span>
+              </p>
+             
+             <div class=" mb-1">
+                plannet: <button (click)="palnetsdetails(prop?.homeworld)" class="float-end btn btn-light">
+                    Details
+                </button>
+                
+             </div>
+        </div>
+          <div>
+            <h6>Description</h6>
+            <p>{{result.description}}</p>
+          </div>
+    </div>
+     
+</div>
+<ng-template #loading>
+<p>loading...</p>
+</ng-template>
+<button (click)="getbackcharacters()" class="btn btn-light">All Characters</button>
+ </div>
+
+</div>

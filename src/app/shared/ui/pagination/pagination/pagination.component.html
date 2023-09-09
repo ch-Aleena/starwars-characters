@@ -1,0 +1,10 @@
+
+<div class="flex mt-4">
+    <button (click)="onPrevClick()"
+    [disabled]="CurrentPage == 1" class="btn btn-light mx-2 px-3">Pre</button>
+   <span> {{CurrentPage +'/'+ TotalPages}}</span>
+    <button (click)="onNextClick()"
+    [disabled]="CurrentPage == TotalPages" class="btn btn-light mx-2 px-3">Next</button>
+    
+</div>
+

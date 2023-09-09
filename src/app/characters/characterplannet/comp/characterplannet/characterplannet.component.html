@@ -1,0 +1,32 @@
+<div class="container">
+<div class="mt-5 details">
+    <div *ngIf="planetdetails$|async as details else loading">
+        <div *ngIf="details.result as result">
+            <div *ngIf="result.properties as prop">
+                <h4 class="text-center pb-2">{{prop?.name}}</h4>
+                <p class="border-bottom ">
+                    Diameter<span class="float-end">{{ prop?.diameter }}</span> 
+                 </p>
+                 <p class="border-bottom ">
+                    Rotation_Period<span class="float-end">{{ prop?.rotation_period }}</span> 
+                 </p>
+                 <p class="border-bottom ">
+                    Orbital_Rotation<span class="float-end">{{ prop?.orbital_period}}</span> 
+                 </p>
+                 <p class="border-bottom ">
+                    Population<span class="float-end">{{ prop?.population }}</span> 
+                 </p>
+                 
+            </div>
+            <div>
+                <h6>Description</h6>
+                <p>{{result?.description}}</p>
+              </div>
+        </div>
+    </div>
+    <ng-template #loading>
+        <p>Loading....</p>
+    </ng-template>
+    <button (click)="goback()" class="btn btn-light"> character</button>
+</div>
+</div>
