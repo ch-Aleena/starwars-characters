@@ -23,6 +23,7 @@ onPrevClick():void{
   }
    
 }
+
 onNextClick():void{
   
   this.CurrentPage=parseInt(this.CurrentPage.toString())

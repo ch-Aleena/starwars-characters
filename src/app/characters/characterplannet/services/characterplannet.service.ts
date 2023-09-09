@@ -12,7 +12,10 @@ export class CharacterplannetService {
 
   constructor(private _api:ApiService) { }
 
-  getplanetdetails(plannet_id:number):Observable<Characterplannet>{
+  // retrieve plannet details from api call using plannet id
+  getPlanetDetails(plannet_id:number):Observable<Characterplannet>{
+
     return this._api.get<Characterplannet>(this.plannet_url+plannet_id)
+
  }
 }
